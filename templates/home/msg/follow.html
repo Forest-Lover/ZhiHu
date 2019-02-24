@@ -1,0 +1,46 @@
+{% extends "home/base_home.html" %}
+
+{% block content_list %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">最新</h3>
+        </div>
+        <div class="panel-body">
+            {% for f in this_user.follow_msg.list.unread %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="text-primary">{{ f.afollow.username }}&emsp; 关注了您</h4>
+                    </div>
+                    <div class="col-md-4 text-right text-muted">
+                        {{ f.addtime }}
+                    </div>
+                </div>
+                <hr>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">全部</h3>
+        </div>
+        <div class="panel-body">
+            {% for f in this_user.follow_msg.list.read %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="text-primary">{{ f.afollow.username }}&emsp; 关注了您</h4>
+                    </div>
+                    <div class="col-md-4 text-right text-muted">
+                        {{ f.addtime }}
+                    </div>
+                </div>
+                <hr>
+
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}

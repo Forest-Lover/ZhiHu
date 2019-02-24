@@ -1,0 +1,21 @@
+{% extends "home/base_home.html" %}
+
+{% block content_list %}
+    {% for q in question.list %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                <div class="col-md-8">
+                    <h3 class="panel-title">题目：&emsp;{{ q.title }}</h3>
+                </div>
+                <div class="col-md-4 text-right text-muted">
+                    {{ q.updatetime }}
+                </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <p>{{ q.discription }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

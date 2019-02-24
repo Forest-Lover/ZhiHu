@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>知乎 - 个人主页</title>
+    <style>
+        body {
+            height: 3000px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="padding: 0px 100px">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">知乎</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="/#mainpage">首页</a></li>
+                        <li><a href="/#hottopic">热门</a></li>
+                    </ul>
+                    {% if request.user.is_authenticated %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    {{ request.user }}<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/home/question_info/?user_id={{ request.user.id }}">
+                                        <span class="glyphicon glyphicon-home"></span>我的主页</a></li>
+                                    <li><a href="/setting/"><span class="glyphicon glyphicon-cog"></span>设置</a></li>
+                                    <li><a href="/signout/"><span class="glyphicon glyphicon-off"></span>注销</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="/signin/"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                            <li><a href="/signup/"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+                        </ul>
+                    {% endif %}
+
+                </div>
+            </div>
+        </nav>
+
+        <div class="row" style="padding-top: 75px">
+            <div class="col-md-12">
+                <div class="panel" style="background-color: azure;">
+                    <div class="row">
+                        <div class="col-md-1">
+                            <img src="{{ this_user.portrait.img.url }}" alt="请上传头像" class="img-rounded"
+                            style="width: 100px; height: 100px">
+                        </div>
+                        <div class="col-md-11"><br>
+                            <h3>&emsp;{{ this_user.username }}的主页</h3><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="panel">
+                    <ol class="breadcrumb">
+                        <li><a href="/home/question_info/?user_id={{ this_user.id }}">提问</a></li>
+                        <li><a href="/home/reply_info/?user_id={{ this_user.id }}">回答</a></li>
+                        <li><a href="/home/follow_info/?user_id={{ this_user.id }}">关注</a></li>
+                        <li><a href="/home/fav_info/?user_id={{ this_user.id }}">收藏</a></li>
+                        <li><a href="/home/agree_info/?user_id={{ this_user.id }}">点赞</a></li>
+                    </ol>
+                    <div class="row">
+                        <div class="col-md-10 col-md-push-1">
+                            {% block content_list %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading text-center">
+                        <h4>消息提醒</h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <a href="/home/reply_msg/?user_id={{ this_user.id }}">
+                                <li class="list-group-item">回复({{ this_user.reply_msg.count.all }})
+                                    <span class="badge">{{ this_user.reply_msg.count.unread }}</span></li>
+                            </a>
+                            <a href="/home/follow_msg/?user_id={{ this_user.id }}">
+                                <li class="list-group-item">关注({{ this_user.follow_msg.count.all }})
+                                    <span class="badge">{{ this_user.follow_msg.count.unread }}</span></li>
+                            </a>
+                            <a href="/home/fav_msg/?user_id={{ this_user.id }}">
+                                <li class="list-group-item">收藏({{ this_user.fav_msg.count.all }})
+                                    <span class="badge">{{ this_user.fav_msg.count.unread }}</span></li>
+                            </a>
+                            <a href="/home/agree_msg/?user_id={{ this_user.id }}">
+                                <li class="list-group-item">点赞({{ this_user.agree_msg.count.all }})
+                                    <span class="badge">{{ this_user.agree_msg.count.unread }}</span></li>
+                            </a>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

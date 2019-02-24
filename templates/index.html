@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>知乎 - 给你不一样的世界</title>
+    <style>
+        body {
+            height: 3000px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="padding: 0px 100px">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">知乎</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#mainpage" data-toggle="tab">首页</a></li>
+                        <li><a href="#hottopic" data-toggle="tab">热门</a></li>
+                        {% if request.user.is_authenticated %}
+                            <li>
+                                <a href="#" data-toggle="modal"
+                                   data-target="#myModal">提问</a>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <form class="navbar-form" role="search" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Search">
+                                </div>
+                                <button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                    {% if request.user.is_authenticated %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    {{ request.user }}<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/home/question_info/?user_id={{ request.user.id }}">
+                                        <span class="glyphicon glyphicon-home"></span>我的主页</a></li>
+                                    <li><a href="/setting/"><span class="glyphicon glyphicon-cog"></span>设置</a></li>
+                                    <li><a href="/signout/"><span class="glyphicon glyphicon-off"></span>注销</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="/signin/"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                            <li><a href="/signup/"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+                        </ul>
+                    {% endif %}
+
+                </div>
+            </div>
+        </nav>
+
+        <div class="row" style="padding-top: 75px">
+            <div class="{% if request.user.is_authenticated %}col-md-9{% else %}col-md-10 col-md-push-1{% endif %}">
+
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="mainpage">
+                        {% for q in question.all %}
+                            <div class="panel">
+                                <div>
+                                    <div class="col-md-9 panel-heading">
+                                        <strong class="panel-title text-big text-right">
+                                            <span class="glyphicon glyphicon-user"></span>{{ q.author.username }}
+                                        </strong>
+                                        <span class="text-muted">({{ q.addtime }} &ensp;热度:{{ q.hitcount }})</span>
+                                    </div>
+                                    <div class="col-md-3 panel-heading text-right">
+                                        {% if request.user.is_authenticated %}
+                                            <a id="id_follow_{{ q.id }}" href="#" style="margin-right: 5%">
+                                                关注</a>
+                                            <script>
+                                                $(function () {
+                                                    $("#id_follow_{{ q.id }}").load("/follow/?load=1&follow_id={{ q.author.id }}")
+                                                        .click(function () {
+                                                            $(this).load("/follow/?update=1&follow_id={{ q.author.id }}");
+                                                        });
+                                                });
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                    <div class="panel-body">
+                                        <h4>{{ q.title }}</h4>
+                                        <hr>
+                                        <p>{{ q.description }}</p>
+                                    </div>
+                                    <div class="text-right" style="margin-right: 5%">
+                                        <a href="/question/?question_id={{ q.id }}">
+                                            <span class="glyphicon"></span>详情
+                                        </a>
+                                        {% if request.user.is_authenticated %}
+                                            <span>&emsp;&emsp;</span>
+                                            <a id="id_favorite_{{ q.id }}" href="#">
+                                                收藏</a>
+                                            <script>
+                                                $(function () {
+                                                    $("#id_favorite_{{ q.id }}").load("/favorite/?load=1&question_id={{ q.id }}")
+                                                        .click(function () {
+                                                            $(this).load("/favorite/?update=1&question_id={{ q.id }}");
+                                                        });
+                                                });
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="tab-pane fade" id="hottopic">
+                        {% for q in question.hot %}
+                            <div class="panel">
+                                <div>
+                                    <div class="col-md-9 panel-heading">
+                                        <strong class="panel-title text-big text-right">
+                                            <span class="glyphicon glyphicon-user"></span>{{ q.author.username }}
+                                        </strong>
+                                        <span class="text-muted">({{ q.addtime }} &ensp;热度:{{ q.hitcount }})</span>
+                                    </div>
+                                    <div class="col-md-3 panel-heading text-right">
+                                        {% if request.user.is_authenticated %}
+                                            <a id="id_follow_hot_{{ q.id }}" href="#" style="margin-right: 5%">
+                                                关注</a>
+                                            <script>
+                                                $(function () {
+                                                    $("#id_follow_hot_{{ q.id }}").load("/follow/?load=1&follow_id={{ q.author.id }}")
+                                                        .click(function () {
+                                                            $(this).load("/follow/?update=1&follow_id={{ q.author.id }}");
+                                                        });
+                                                });
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                    <div class="panel-body">
+                                        <h4>{{ q.title }}</h4>
+                                        <hr>
+                                        <p>{{ q.description }}</p>
+                                    </div>
+                                    <div class="text-right" style="margin-right: 5%">
+                                        <a href="/question/?question_id={{ q.id }}">
+                                            <span class="glyphicon"></span>详情
+                                        </a>
+                                        {% if request.user.is_authenticated %}
+                                            <span>&emsp;&emsp;</span>
+                                            <a id="id_favorite_hot_{{ q.id }}" href="#">
+                                                收藏</a>
+                                            <script>
+                                                $(function () {
+                                                    $("#id_favorite_hot_{{ q.id }}").load("/favorite/?load=1&question_id={{ q.id }}")
+                                                        .click(function () {
+                                                            $(this).load("/favorite/?update=1&question_id={{ q.id }}");
+                                                        });
+                                                });
+                                            </script>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <br>
+                                <div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if request.user.is_authenticated %}
+                <div class="col-md-3" style="position: fixed; top: 75px;bottom: 0; left: 75%;right: 5%">
+                    <div class="panel panel-default" style="height: 80%">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">个人中心</h3>
+                        </div>
+                        <div class="panel-body text-center">
+                            <div class="row">
+                                <div class="col-md-6 col-md-push-3">
+                                    <a id="id_portrait" type="file" name="portrait" class="thumbnail"
+                                       href="/home/question_info/?user_id={{ request.user.id }}">
+                                        <img src="{{ user_portrait.img.url }}" alt="请上传头像" class="img-circle">
+                                    </a>
+                                    {#                                <script>#}
+                                    {#                                    $(function () {#}
+                                    {#                                       $("#id_portrait").click#}
+                                    {#                                    });#}
+                                    {#                                </script>#}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="div-md-row text-primary">
+                                <p>
+                                    <a href="/home/reply_msg/?user_id={{ request.user.id }}">
+                                        回复<span class="badge">{{ user_msg.reply_msg }}</span></a> &ensp;
+                                    <a href="/home/follow_msg/?user_id={{ request.user.id }}">
+                                        关注<span class="badge">{{ user_msg.follow_msg }}</span></a><br>
+                                    <a href="/home/fav_msg/?user_id={{ request.user.id }}">
+                                        收藏<span class="badge">{{ user_msg.fav_msg }}</span></a> &ensp;
+                                    <a href="/home/agree_msg/?user_id={{ request.user.id }}">
+                                        点赞<span class="badge">{{ user_msg.agree_msg }}</span></a>
+                                </p>
+                                <br>
+                                <p>
+                                    <a href="/home/question_info/?user_id={{ request.user.id }}">
+                                        我的提问({{ user_info.question_info }})</a><br>
+                                    <a href="/home/reply_info/?user_id={{ request.user.id }}">
+                                        我的回答({{ user_info.reply_info }})</a><br>
+                                    <a href="/home/follow_info/?user_id={{ request.user.id }}">
+                                        我的关注({{ user_info.follow_info }})</a><br>
+                                    <a href="/home/fav_info/?user_id={{ request.user.id }}">
+                                        我的收藏({{ user_info.fav_info }})</a><br>
+                                    <a href="/home/agree_info/?user_id={{ request.user.id }}">
+                                        我的点赞({{ user_info.agree_info }})</a><br>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h3 class="modal-title" id="myModalLabel">写下你的问题</h3>
+                        <p class="text-muted">描述精确的问题更易得到解答</p>
+                    </div>
+                    <div class="modal-body" style="padding: 0 5%">
+                        <form class="form-horizontal" role="form" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <textarea type="text" class="form-control" id="title" name="title"
+                                          placeholder="问题标题" required></textarea>
+
+                                <br><h4>问题描述（可选）：</h4>
+                                <textarea type="text" class="form-control" id="description" name="description"
+                                          placeholder="问题背景、条件等详细信息" rows="8"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    提交
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+
+    </div>
+{% endblock %}

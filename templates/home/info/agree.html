@@ -1,0 +1,28 @@
+{% extends "home/base_home.html" %}
+
+{% block content_list %}
+    {% for a in agree.list %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 class="panel-title">点赞了&emsp;{{ a.reply.author.username }}&emsp;的回答</h3>
+                    </div>
+                    <div class="col-md-4 text-right text-muted">
+                        {{ a.addtime }}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <strong>原题目&emsp;{{ a.reply.question.title }}</strong><br>
+                <p style="padding-left: 2em">{{ a.reply.question.description }}</p>
+                <hr>
+                <strong>点赞了回复：</strong>
+                <p style="padding-left: 2em">
+                    {{ a.reply.content }}<br>
+                    <img src="{{ a.reply.picture.img.url }}">
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

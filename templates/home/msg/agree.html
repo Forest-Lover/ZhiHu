@@ -1,0 +1,64 @@
+{% extends "home/base_home.html" %}
+
+{% block content_list %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">最新</h3>
+        </div>
+        <div class="panel-body">
+            {% for a in this_user.agree_msg.list.unread %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="text-primary">{{ a.author.username }}&emsp;点赞了您的回答</h4>
+                    </div>
+                    <div class="col-md-4 text-right text-muted">
+                        {{ a.addtime }}
+                    </div>
+                </div>
+                <div class="col-md-10 col-md-push-1">
+                    <strong>原问题题目：{{ a.reply.question.title }}</strong><br>
+                    <p style="padding-left: 2em">{{ a.reply.question.description }}</p>
+                    <hr>
+                    <strong>您的回答：</strong><br>
+                    <p style="padding-left: 2em">
+                        {{ a.reply.content }}<br>
+                        <img src="{{ a.reply.picture.img.url }}">
+                    </p>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">全部</h3>
+        </div>
+        <div class="panel-body">
+            {% for a in this_user.agree_msg.list.read %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="text-primary">{{ a.author.username }}&emsp;点赞了您的回答</h4>
+                    </div>
+                    <div class="col-md-4 text-right text-muted">
+                        {{ a.addtime }}
+                    </div>
+                </div>
+                <div class="col-md-10 col-md-push-1">
+                    <strong>原问题题目：{{ a.reply.question.title }}</strong><br>
+                    <p style="padding-left: 2em">{{ a.reply.question.description }}</p>
+                    <hr>
+                    <strong>您的回答：</strong><br>
+                    <p style="padding-left: 2em">
+                        {{ a.reply.content }}<br>
+                        <img src="{{ a.reply.picture.img.url }}">
+                    </p>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}

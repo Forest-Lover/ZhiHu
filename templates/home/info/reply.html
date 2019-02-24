@@ -1,0 +1,29 @@
+{% extends "home/base_home.html" %}
+
+{% block content_list %}
+    {% for r in reply.list %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                <div class="col-md-8">
+                    <h3 class="panel-title">回答了&emsp;{{ r.question.author.username }}&emsp;的提问</h3>
+                </div>
+                <div class="col-md-4 text-right text-muted">
+                    {{ r.updatetime }}
+                </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <strong>原题目&emsp;{{ r.question.title }}</strong><br>
+                <p style="padding-left: 2em">{{ r.question.description }}</p>
+                <hr>
+                <strong>回复：</strong>
+                <p style="padding-left: 2em">
+                    {{ r.content }}<br>
+                    <img src="{{ r.picture.img.url }}">
+                </p>
+
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

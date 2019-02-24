@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>知乎 - 欢迎注册</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-primary" style="margin-top: 15%; padding: 0 5%; opacity: 0.9">
+                    <div class="text-center">
+                        <img src="/static/img/log.jpg" class="img-rounded">
+                        <p class="text-muted">给你不一样的世界</p>
+                        <hr>
+                    </div>
+                    <form class="form-horizontal" role="form" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username" class="col-sm-2 control-label">账号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="username" name="username"
+                                       placeholder="Username" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="Password" required
+                                       pattern="^(?![A-Z]+$)(?![a-z]+$)(?!\d+$)(?![\W_]+$)\S{6,16}$"
+                                       title="密码需要含有小写字母、大写字母、数字、特殊符号的两种及以上，并且长度在6到16位">
+                            </div>
+                            <script>
+                                $(function () {
+                                    $("#password").blur(function () {
+                                        var p = "^" + $(this).val() + "$";
+                                        $("#password_").attr("pattern", p);
+                                    });
+                                });
+                            </script>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_" class="col-sm-2 control-label">重复密码</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="password_" name="password_"
+                                       placeholder="Password" required pattern="" title="密码不一致">
+                            </div>
+                        </div>
+                        {% ifequal msg "Success" %}
+                            <p class="text-success text-center">注册成功</p>
+                        {% endifequal %}
+                        {% ifequal msg "AlreadyExist" %}
+                            <p class="text-danger text-center">该用户已存在</p>
+                        {% endifequal %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default" id="id_signup">注册</button>
+                            </div>
+                        </div>
+                        <p class="text-center">已有账号？<a href="/signin/">登录</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

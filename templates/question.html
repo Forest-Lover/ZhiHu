@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>知乎 - 问题详情</title>
+    <style>
+        body {
+            height: 3000px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="padding: 0px 100px">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/">知乎</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="/#mainpage">首页</a></li>
+                        <li><a href="/#hottopic">热门</a></li>
+                    </ul>
+                    {% if request.user.is_authenticated %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    {{ request.user }}<b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/home/question_info/?user_id={{ request.user.id }}">
+                                        <span class="glyphicon glyphicon-home"></span>我的主页</a></li>
+                                    <li><a href="/setting/"><span class="glyphicon glyphicon-cog"></span>设置</a></li>
+                                    <li><a href="/signout/"><span class="glyphicon glyphicon-off"></span>注销</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="/signin/"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                            <li><a href="/signup/"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+                        </ul>
+                    {% endif %}
+
+                </div>
+            </div>
+        </nav>
+
+        <div class="row" style="padding-top: 75px">
+            <div class="col-md-10 col-md-push-1">
+
+                <div class="panel">
+                    <div>
+                        <div class="col-md-9 panel-heading">
+                            <strong class="panel-title text-big">
+                                <span class="glyphicon glyphicon-user"></span>{{ question.author.username }}
+                            </strong>
+                            <span class="text-muted">({{ question.addtime }} &ensp;热度:{{ question.hitcount }})</span>
+                        </div>
+                        <div class="col-md-3 panel-heading text-right">
+                            {% if request.user.is_authenticated %}
+                                <a id="id_follow" href="#"
+                                   style="margin-right: 5%">关注
+                                </a>
+                                <script>
+                                    $(function () {
+                                        $("#id_follow").load("/follow/?load=1&follow_id={{ question.author.id }}")
+                                            .click(function () {
+                                                $(this).load("/follow/?update=1&follow_id={{ question.author.id }}");
+                                            });
+                                    });
+                                </script>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <div class="panel-body">
+                            <h4>{{ question.title }}</h4>
+                            <hr>
+                            <p>{{ question.description }}</p>
+                            <hr>
+                            <div class="text-right" style="margin-right: 5%">
+                                {% if request.user.is_authenticated %}
+                                    <a href="#" data-toggle="modal"
+                                       data-target="#myModal_reply">
+                                        <span class="glyphicon"></span>回复
+                                    </a>
+                                    <span>&emsp;&emsp;</span>
+                                    <a id="id_favorite" href="#">
+                                        收藏</a>
+                                    <script>
+                                        $(function () {
+                                            $("#id_favorite").load("/favorite/?load=1&question_id={{ question.id }}")
+                                                .click(function () {
+                                                    $(this).load("/favorite/?update=1&question_id={{ question.id }}");
+                                                });
+                                        });
+                                    </script>
+                                {% endif %}
+                            </div>
+                            <hr>
+                            {% for r in reply %}
+                                <div class="row panel ">
+                                    <div class="col-md-10 " style="margin-left: 3%">
+                                        <div class="col-md-9 panel-heading">
+                                            <strong class="panel-title text-big">
+                                                <span class="glyphicon glyphicon-user"></span>{{ r.author.username }}
+                                            </strong>
+                                            <span class="text-muted">({{ r.addtime }})</span>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="col-md-10 col-md-push-1" style="">
+                                        <div class="text-left" style="">
+                                            <p style="">{{ r.content }}</p>
+                                            <img src="{{ r.picture.img.url }}" alt="">
+                                            <div class="text-right" style="margin-right: 5%">
+                                                {% if request.user.is_authenticated %}
+                                                    {#                                                    <a href="/comment/?question_id={{ question.id }}">#}
+                                                    {#                                                        <span class="glyphicon"></span>评论#}
+                                                    {#                                                    </a>#}
+                                                    <span>&emsp;&emsp;</span>
+                                                    <a id="id_reply_{{ r.id }}" href="#">
+                                                        <span class="glyphicon"></span>点赞
+                                                    </a>
+                                                    <script>
+                                                        $(function () {
+                                                            $("#id_reply_{{ r.id }}").load("/agree/?load=1&reply_id={{ r.id }}")
+                                                                .click(function () {
+                                                                    $(this).load("/agree/?update=1&reply_id={{ r.id }}");
+                                                                });
+                                                        });
+                                                    </script>
+                                                {% endif %}
+                                            </div>
+                                            <hr>
+                                            {% for r in reply %}
+                                                <div>
+                                                    <h5>{{ r. }}</h5>
+                                                </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="myModal_reply" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h3 class="modal-title" id="myModalLabel">写下你的回复</h3>
+                        <p class="text-muted">神回复创造不一样的世界</p>
+                    </div>
+                    <div class="modal-body" style="padding: 0 5%">
+                        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <textarea type="text" class="form-control" id="reply_content" name="reply_content"
+                                          placeholder="添加回复内容" rows="8" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="img">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    提交
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+    </div>
+{% endblock %}

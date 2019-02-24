@@ -1,0 +1,63 @@
+{% extends "home/base_home.html" %}
+
+{% block content_list %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">最新</h3>
+        </div>
+        <div class="panel-body">
+            {% for r in this_user.reply_msg.list.unread %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="text-primary">{{ r.author.username }}&emsp;回答了您的提问</h4>
+                    </div>
+                    <div class="col-md-4 text-right text-muted">
+                        {{ r.updatetime }}
+                    </div>
+                </div>
+                <div class="col-md-10 col-md-push-1">
+                    <strong>原问题题目：{{ r.question.title }}</strong><br>
+                    <p style="padding-left: 2em">{{ r.question.description }}</p>
+                    <hr>
+                    <strong>他（她）的回答：</strong><br>
+                    <p style="padding-left: 2em">
+                        {{ r.content }}<br>
+                        <img src="{{ r.picture.img.url }}">
+                    </p>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">全部</h3>
+        </div>
+        <div class="panel-body">
+            {% for r in this_user.reply_msg.list.read %}
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="text-primary">{{ r.author.username }}&emsp;回答了您的提问</h4>
+                    </div>
+                    <div class="col-md-4 text-right text-muted">
+                        {{ r.updatetime }}
+                    </div>
+                </div>
+                <div class="col-md-10 col-md-push-1">
+                    <strong>原问题题目：{{ r.question.title }}</strong><br>
+                    <p style="padding-left: 2em">{{ r.question.description }}</p>
+                    <hr>
+                    <strong>他（她）的回答：</strong><br>
+                    <p style="padding-left: 2em">
+                        {{ r.content }}<br>
+                        <img src="{{ r.picture.img.url }}">
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
